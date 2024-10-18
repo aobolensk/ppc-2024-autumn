@@ -127,12 +127,20 @@ TEST(lopatin_i_count_words_mpi, test_6k_words) {
 }
 
 int main(int argc, char **argv) {
-  boost::mpi::environment env(argc, argv);
-  boost::mpi::communicator world;
-  ::testing::InitGoogleTest(&argc, argv);
-  ::testing::TestEventListeners &listeners = ::testing::UnitTest::GetInstance()->listeners();
-  if (world.rank() != 0) {
-    delete listeners.Release(listeners.default_result_printer());
+  try {
+    boost::mpi::environment env(argc, argv);
+    boost::mpi::communicator world;
+    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::TestEventListeners &listeners = ::testing::UnitTest::GetInstance()->listeners();
+    if (world.rank() != 0) {
+      delete listeners.Release(listeners.default_result_printer());
+    }
+    return RUN_ALL_TESTS();
+  } catch (const std::exception &e) {
+    std::cerr << "Exception caught: " << e.what() << std::endl;
+    return 1;
+  } catch (...) {
+    std::cerr << "Unknown exception caught." << std::endl;
+    return 1;
   }
-  return RUN_ALL_TESTS();
 }
