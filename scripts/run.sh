@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [[ $OSTYPE == "linux-gnu" && -z "$ASAN_RUN" ]]; then
   valgrind --error-exitcode=1 --leak-check=full --show-leak-kinds=all ./build/bin/core_func_tests
   valgrind --error-exitcode=1 --leak-check=full --show-leak-kinds=all ./build/bin/ref_func_tests
